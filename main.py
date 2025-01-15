@@ -1,3 +1,4 @@
+
 class Event:
     def __init__(self, payload: dict):
         self.payload = payload
@@ -12,13 +13,13 @@ class OrderRejectedEvent(Event):
 
 class Store:
     def __init__(self, name):
-        self.name = name    
+        self.name = name
         self.inventory = {}
         self.queue = []
 
     def add_product(self, product_name, quantity):
-            self.inventory[product_name] = self.inventory.get(product_name, 0) + quantity
-    
+        self.inventory[product_name] = self.inventory.get(product_name, 0) + quantity
+
     def submit_order(self, customer, product_name, quantity):
         if product_name in self.inventory and self.inventory[product_name] >= quantity:
             self.inventory[product_name] -= quantity
@@ -36,4 +37,17 @@ class Store:
             elif isinstance(event, OrderRejectedEvent):
                 print(f"Order Rejected: {event.payload}")
 
-    
+class Customer:
+    def __init__(self, name):
+        self.name = name
+if __name__ == "__main__":
+    store = Store("tarcin")
+    customer = Customer("ikbal")
+
+    store.add_product("keyboard", 10)
+    store.add_product("gamepad", 20)
+
+    store.submit_order(customer, "Keyboard", 1) 
+    store.submit_order(customer, "Gamepad", 25) 
+
+    store.process_events()
